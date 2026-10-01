@@ -1,0 +1,18 @@
+{
+  "name": "yokoyama-skills",
+  "owner": {
+    "name": "横山直宏 (Naohiro Yokoyama)",
+    "url": "https://github.com/yokoyamactw-max"
+  },
+  "metadata": {
+    "description": "横山直宏が作った Claude Code 用スキル集"
+  },
+  "plugins": [
+    {
+      "name": "video-to-html",
+      "source": "./plugins/video-to-html",
+      "description": "動画・音声を、スクリーンショット付きの読みやすい書き起こしHTMLにする",
+      "version": "1.0.0"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+video-to-html 利用規約（ライセンス）
+
+Copyright (c) 2026 横山直宏 (Naohiro Yokoyama)
+
+1. 使用と改変
+   このソフトウェア（スキルの手順書・スクリプト・参考資料を含む。以下「本ソフトウェア」）を
+   入手した人は、個人または自社の業務のために、無料で使用し、改変することができます。
+
+2. 再配布は許可制
+   本ソフトウェアおよびその改変版を、第三者に配布・公開・販売・貸与すること、
+   また有料の商品・講座・サービスの一部として提供することは、
+   著作権者の事前の許可（メール・メッセージでの許可を含む）がない限りできません。
+   許可の相談は、GitHub リポジトリの Issue からご連絡ください。
+
+3. 本ソフトウェアで作ったもの
+   本ソフトウェアで作った書き起こしHTMLなどの成果物の扱いは、元になった動画・音声の
+   権利者の許可範囲に従ってください。他人の講座・セミナーの書き起こしを、
+   権利者の許可なく公開・共有しないでください。
+
+4. 無保証
+   本ソフトウェアは現状のまま提供され、明示・黙示を問わず、いかなる保証もありません。
+   本ソフトウェアの使用によって生じたいかなる損害についても、著作権者は責任を負いません。
+
+----------------------------------------------------------------------
+English summary (the Japanese text above prevails):
+You may use and modify this software free of charge for personal or internal business use.
+Redistribution, publication, sale, or inclusion in paid products/services requires prior
+permission from the copyright holder. Provided "AS IS" without warranty of any kind.
