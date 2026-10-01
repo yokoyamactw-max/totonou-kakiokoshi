@@ -1,0 +1,13 @@
+{
+  "name": "totonou-kakiokoshi",
+  "version": "1.1.0",
+  "description": "ととのう書き起こし：動画・音声（Loom・YouTube・UTAGE・Zoom録画・Drive・手元のファイル）を、スクリーンショット付きの読みやすい書き起こしHTMLにするスキル。文字起こしはMacの中で動くので無料。",
+  "author": {
+    "name": "横山直宏 (Naohiro Yokoyama)",
+    "url": "https://github.com/yokoyamactw-max"
+  },
+  "homepage": "https://github.com/yokoyamactw-max/totonou-kakiokoshi",
+  "repository": "https://github.com/yokoyamactw-max/totonou-kakiokoshi",
+  "license": "SEE LICENSE IN LICENSE",
+  "keywords": ["transcription", "whisper", "seminar", "screenshot", "html", "japanese"]
+}

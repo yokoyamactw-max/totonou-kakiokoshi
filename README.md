@@ -1,4 +1,4 @@
-# video-to-html
+# ととのう書き起こし（totonou-kakiokoshi）
 
 セミナー・講座・会議の動画を、**スクリーンショット付きの読みやすい書き起こしHTML** にする Claude Code 用のスキルです。
 
@@ -57,38 +57,41 @@ pipx install mlx-whisper && pipx ensurepath
 ターミナルで次の2つを実行します。
 
 ```bash
-claude plugin marketplace add yokoyamactw-max/video-to-html
+claude plugin marketplace add yokoyamactw-max/totonou-kakiokoshi
 ```
 
 ```bash
-claude plugin install video-to-html@yokoyama-skills
+claude plugin install totonou-kakiokoshi@yokoyama-skills
 ```
 
 Claude Code を開き直すと使えるようになります。
-新しい版が出たときは `claude plugin marketplace update yokoyama-skills` のあと `claude plugin update video-to-html@yokoyama-skills` で更新できます。
+新しい版が出たときは `claude plugin marketplace update yokoyama-skills` のあと `claude plugin update totonou-kakiokoshi@yokoyama-skills` で更新できます。
 
 **B. zip ファイルで入れる**
 
-1. 受け取った `video-to-html-v1.0.0.zip` をダブルクリックして解凍する
-2. 中の `video-to-html` フォルダを、ホームフォルダの `.claude/skills/` に入れる（最終的に `~/.claude/skills/video-to-html/SKILL.md` がある状態）
+1. 受け取った `totonou-kakiokoshi-v1.1.0.zip` をダブルクリックして解凍する
+2. 中の `totonou-kakiokoshi` フォルダを、ホームフォルダの `.claude/skills/` に入れる（最終的に `~/.claude/skills/totonou-kakiokoshi/SKILL.md` がある状態）
    - Finder で `Command + Shift + G` を押し、`~/.claude/skills` と入力すると開けます。フォルダがなければ作ってください
 3. Claude Code を開き直す
 
 ### 3. 動くか確認する
 
-Claude Code に「video-to-html の環境チェックをして」と頼むと、必要なソフトがそろっているかを確認してくれます。
+Claude Code に「ととのう書き起こしの環境チェックをして」と頼むと、必要なソフトがそろっているかを確認してくれます。
 
 ## 使い方
 
-Claude Code にこう話しかけるだけです。
+Claude Code に「ととのう書き起こし」と話しかけて、動画のURLかファイルを渡すだけです。
 
-- 「https://www.loom.com/share/xxxx のセミナーを、スクショ付きで書き起こしてHTMLにして」
-- 「~/Downloads/会議録画.mp4 を書き起こして、ToDoも出して」
-- 「この動画の 23:00〜25:40 だけまとめて」
+- 「ととのう書き起こし https://www.loom.com/share/xxxx」
+- 「~/Downloads/会議録画.mp4 をHTMLで書き起こして。ToDoも出して」
+- 「この動画の 23:00〜25:40 だけ、ととのう書き起こしで」
+
+「HTMLで書き起こし」「スクショ付きで書き起こし」と言っても動きます。
+コマンドで確実に呼びたいときは、GitHub から入れた場合は `/totonou-kakiokoshi:totonou-kakiokoshi`、zip で入れた場合は `/totonou-kakiokoshi` です。
 
 途中で、素材が誰のものか・全編か一部か・講義か会議かを聞かれることがあります。
 
-できあがったHTMLは、指定がなければ `~/Documents/video-to-html/` に保存されます。作業用の動画などは `~/Movies/video-to-html/` に残るので、不要になったら削除してください。
+できあがったHTMLは、指定がなければ `~/Documents/ととのう書き起こし/` に保存されます。作業用の動画などは `~/Movies/totonou-kakiokoshi/` に残るので、不要になったら削除してください。
 
 1時間半のセミナーで、全体の所要時間はおよそ20〜30分（取り込み10分前後＋文字起こし数分＋整形）です。
 
