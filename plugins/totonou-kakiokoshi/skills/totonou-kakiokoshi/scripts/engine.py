@@ -17,7 +17,18 @@ MODELS = {
 
 
 def apple_silicon():
-    return platform.system() == "Darwin" and platform.machine() == "arm64"
+    """Apple シリコンの Mac か（Intel 用の Python を Rosetta で動かしている場合も True）。"""
+    if platform.system() != "Darwin":
+        return False
+    if platform.machine() == "arm64":
+        return True
+    r = subprocess.run(["sysctl", "-n", "hw.optional.arm64"], capture_output=True, text=True)
+    return r.stdout.strip() == "1"
+
+
+def rosetta():
+    """Apple シリコンの Mac で、Intel 用の Python（Rosetta）が動いているか。"""
+    return apple_silicon() and platform.machine() != "arm64"
 
 
 def venv_python():

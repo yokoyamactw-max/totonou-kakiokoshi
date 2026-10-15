@@ -1,6 +1,6 @@
 """音声を取り出して文字起こしし、transcript.json / transcript.txt を作る。
 使い方: python3 transcribe.py <workdir> [--engine auto|mlx|faster]
-        python3 transcribe.py <workdir> --redo 開始秒 終了秒   # その区間だけ large-v3 で聞き直して表示
+        python3 transcribe.py <workdir> --redo 開始秒 終了秒   # その区間だけ large-v3 で聞き直して表示（初回は約3GBを取得）
 - 文字起こしエンジン（auto の選び方）
     Apple シリコンの Mac で mlx_whisper があれば mlx-whisper（速い）
     それ以外（Windows・Intel Mac など）は faster-whisper（check_env.py --setup で入れる専用環境）
@@ -29,7 +29,8 @@ media = os.path.join(wd, meta["media"])
 
 eng = engine.pick(a.engine)
 if eng is None:
-    sys.exit("文字起こしエンジンが見つかりません。`python3 check_env.py` で必要なソフトを確認してください")
+    sys.exit("文字起こしエンジンが見つかりません。次で必要なソフトを確認してください: "
+             f"{'python' if os.name == 'nt' else 'python3'} \"{os.path.join(os.path.dirname(os.path.abspath(__file__)), 'check_env.py')}\"")
 
 
 def cut(src_start, src_end, wav):

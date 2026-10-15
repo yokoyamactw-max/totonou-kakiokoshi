@@ -68,7 +68,11 @@ if sys.version_info < (3, 10):
 
 eng = engine.pick()
 if eng is None:
-    if engine.apple_silicon():
+    if engine.rosetta():
+        missing.append(("文字起こしエンジン", f"Intel 用の Python（{sys.executable}）で動いています。"
+                        "/opt/homebrew の Homebrew と Python を入れると速い mlx-whisper が使えます。"
+                        f"今のままでも python3 \"{os.path.join(here, 'check_env.py')}\" --setup で faster-whisper が使えます"))
+    elif engine.apple_silicon():
         missing.append(("文字起こしエンジン mlx-whisper",
                         "brew install pipx && pipx install mlx-whisper && pipx ensurepath（そのあとターミナルを開き直す）"))
     else:
@@ -90,11 +94,11 @@ if WIN:
     print("\nwinget で入れたあとは、Claude Code（またはターミナル）を一度閉じて開き直してください。"
           "\nまとめて入れるなら（PowerShell）: winget install --id Python.Python.3.12 -e ;"
           " winget install --id Microsoft.VCRedist.2015+.x64 -e ; winget install --id yt-dlp.yt-dlp -e"
-          "\n→ 開き直してから: python -m pip install numpy ; python check_env.py --setup")
+          f"\n→ 開き直してから: python -m pip install numpy ; python \"{os.path.join(here, 'check_env.py')}\" --setup")
 elif MAC:
     print("\nHomebrew が未導入なら https://brew.sh の手順で先に入れてください。")
     if engine.apple_silicon():
         print("まとめて入れるなら: brew install python ffmpeg yt-dlp numpy pipx && pipx install mlx-whisper && pipx ensurepath")
     else:
-        print("まとめて入れるなら: brew install python ffmpeg yt-dlp numpy && python3 check_env.py --setup")
+        print(f"まとめて入れるなら: brew install python ffmpeg yt-dlp numpy && python3 \"{os.path.join(here, 'check_env.py')}\" --setup")
 sys.exit(1)

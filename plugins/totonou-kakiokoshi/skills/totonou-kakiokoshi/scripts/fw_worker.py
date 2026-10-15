@@ -12,7 +12,8 @@ from faster_whisper import WhisperModel
 wav, model, out = sys.argv[1:4]
 total = float(sys.argv[4]) if len(sys.argv) > 4 else 0.0
 
-print(f"モデル {model} を読み込み中（初回は約1.6GBをダウンロード）", flush=True)
+SIZE = {"large-v3-turbo": "約1.6GB", "large-v3": "約3GB"}.get(model, "数GB")
+print(f"モデル {model} を読み込み中（初回は{SIZE}をダウンロード）", flush=True)
 m = WhisperModel(model, device="cpu", compute_type="int8", cpu_threads=os.cpu_count() or 4)
 segments, _ = m.transcribe(wav, language="ja", beam_size=1, condition_on_previous_text=False)
 

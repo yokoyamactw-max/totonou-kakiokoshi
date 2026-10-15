@@ -41,7 +41,7 @@ def probe(path, entries, stream=None):
     if stream:
         cmd += ["-select_streams", stream]
     cmd += ["-show_entries", entries, "-of", "csv=p=0", path]
-    out = subprocess.run(cmd, capture_output=True, text=True).stdout.strip()
+    out = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace").stdout.strip()
     return out
 
 
@@ -103,7 +103,8 @@ else:  # Google Drive（大容量はウイルススキャン確認画面を経�
         url = act.group(1) + "?" + urllib.parse.urlencode(fields)
     expected_bytes = None
     if url:
-        head = subprocess.run(["curl", "-sI", "-b", cj, url], capture_output=True, text=True).stdout
+        head = subprocess.run(["curl", "-sI", "-b", cj, url], capture_output=True, text=True,
+                              encoding="utf-8", errors="replace").stdout
         m = re.search(r"(?im)^content-length:\s*(\d+)", head)
         expected_bytes = int(m.group(1)) if m else None
         # 途中で切れても -C - で続きから取り直す（最大5回）

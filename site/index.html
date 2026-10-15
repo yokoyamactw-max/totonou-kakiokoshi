@@ -160,7 +160,7 @@ footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);color:v
   <tbody>
     <tr><td class="rowh">M系 Mac<br><span class="small muted">（M1〜）</span></td>
       <td><span class="mark ok">○</span>おすすめ。文字起こしが速い</td>
-      <td rowspan="3"><span class="mark ng">×</span>使えません。Cowork の作業はクラウド上で動き、文字起こしモデルや YouTube からの取得が止められているため</td>
+      <td rowspan="3"><span class="mark ng">×</span>使えません。Pro・Max の Cowork は 2026 年 10 月からクラウド上で動き、文字起こしモデルや YouTube からの取得が既定で止められているため</td>
       <td rowspan="3"><span class="mark ng">×</span>使えません。アップロードは 1 ファイル 30MB までで、動画も完成した HTML も入りきらないため</td></tr>
     <tr><td class="rowh">Intel Mac</td>
       <td><span class="mark mid">△</span>使えます。文字起こしに時間がかかります（macOS 13 以降）</td></tr>
@@ -353,7 +353,7 @@ python $HOME\.claude\skills\totonou-kakiokoshi\scripts\check_env.py --setup</pre
     <tr><td class="rowh">全体の時間<br><span class="small muted">（1時間半のセミナー）</span></td><td>M系 Mac：20〜30分ほど（取り込み・文字起こし・要約と整形を合わせて）<br>Intel Mac・Windows：1〜2時間ほど（文字起こしの待ち時間が長いため）<br><span class="small muted">初回だけ、文字起こしモデル（約 1.6GB）のダウンロードで 10〜20 分ほど長くかかります</span></td></tr>
     <tr><td class="rowh">文字起こしの料金</td><td>無料。パソコンの中で動きます</td></tr>
     <tr><td class="rowh">要約・整形</td><td>Claude のプランの利用枠を使います。1時間半のセミナー 1 本で、長い文章の要約を何回か頼むくらいの量です。長い動画を続けて何本も処理すると、プランの利用上限に達することがあります。その場合は、上限が戻るまで時間をおいてから続きを頼みます</td></tr>
-    <tr><td class="rowh">パソコンの空き容量</td><td>文字起こしモデル 約 1.6GB（初回だけ）＋ 作業用に動画 1 本あたり 1GB ほど</td></tr>
+    <tr><td class="rowh">パソコンの空き容量</td><td>文字起こしモデル 約 1.6GB（初回だけ）＋ 作業用に動画 1 本あたり 1GB ほど。聞き取りにくい箇所を「聞き直し」するときだけ、精度の高いモデル 約 3GB を追加で取得します</td></tr>
     <tr><td class="rowh">完成した HTML</td><td>1時間半の講義で 30〜40MB ほど（画面を埋め込むため）。メール添付には大きいサイズです</td></tr>
   </tbody>
 </table></div>
@@ -386,7 +386,7 @@ python $HOME\.claude\skills\totonou-kakiokoshi\scripts\check_env.py --setup</pre
 <details><summary>人名や専門用語が間違っている</summary>
   <p>「〇〇は△△の聞き間違いなので、全体を直して HTML を作り直して」と頼めば直します。スライドに正しい表記が映っていれば、それも手がかりにします。</p></details>
 <details><summary>Cowork や Web 版の claude.ai で使えますか？</summary>
-  <p>使えません。どちらもクラウド上で動くため、大きな動画や文字起こしモデルを扱えません。パソコンの Claude Code（デスクトップアプリの Code タブかターミナル）で使ってください。</p></details>
+  <p>使えません。どちらもクラウド上で動くため（Pro・Max の Cowork は 2026 年 10 月から）、大きな動画や文字起こしモデルを扱えません。パソコンの Claude Code（デスクトップアプリの Code タブかターミナル）で使ってください。</p></details>
 <details><summary>完成した HTML を人に送りたい</summary>
   <p>自分の会議など、共有してよい内容なら、Google Drive などに置いてリンクを送るのが手軽です（メール添付には大きいため）。他人の講座の書き起こしは共有しないでください。</p></details>
 
@@ -397,7 +397,7 @@ python $HOME\.claude\skills\totonou-kakiokoshi\scripts\check_env.py --setup</pre
 <div class="box"><pre>claude plugin marketplace update yokoyama-skills
 claude plugin update totonou-kakiokoshi@yokoyama-skills</pre><button class="copy" type="button">コピー</button></div>
 <h3>削除する</h3>
-<div class="box prompt"><p class="label">Claude Code に貼る文</p><pre>ととのう書き起こしを削除してください。スキルのフォルダ（~/.claude/skills/totonou-kakiokoshi）、専用環境（~/.totonou-kakiokoshi）、文字起こしモデル（~/.cache/huggingface の中の whisper-large-v3-turbo）を、消す前に一覧で見せてから消してください。作業フォルダと完成した HTML は残してください。</pre><button class="copy" type="button">コピー</button></div>
+<div class="box prompt"><p class="label">Claude Code に貼る文</p><pre>ととのう書き起こしを削除してください。スキルのフォルダ（~/.claude/skills/totonou-kakiokoshi）、専用環境（~/.totonou-kakiokoshi）、文字起こしモデル（~/.cache/huggingface の中の whisper-large-v3-turbo と whisper-large-v3）を、消す前に一覧で見せてから消してください。作業フォルダと完成した HTML は残してください。</pre><button class="copy" type="button">コピー</button></div>
 
 <!-- ============================================================ -->
 <h2 id="license"><span class="no">11</span>利用規約（要点）</h2>
