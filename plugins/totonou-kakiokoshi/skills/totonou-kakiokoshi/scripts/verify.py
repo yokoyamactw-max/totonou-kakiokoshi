@@ -7,23 +7,26 @@
 """
 import base64, glob, json, os, re, sys
 
+for _s in (sys.stdout, sys.stderr):
+    _s.reconfigure(encoding="utf-8")
+
 wd, out = os.path.abspath(sys.argv[1]), sys.argv[2]
 ng = []
-meta = json.load(open(os.path.join(wd, "meta.json")))
-segs = json.load(open(os.path.join(wd, "transcript.json")))["segments"]
+meta = json.load(open(os.path.join(wd, "meta.json"), encoding="utf-8"))
+segs = json.load(open(os.path.join(wd, "transcript.json"), encoding="utf-8"))["segments"]
 
 keys_all = set()
 for fi in sorted(glob.glob(os.path.join(wd, "clean", "in_*.json"))):
     n = re.search(r"in_(\d+)\.json", fi).group(1)
     fo = os.path.join(wd, "clean", f"out_{n}.json")
-    ins = json.load(open(fi))
+    ins = json.load(open(fi, encoding="utf-8"))
     if not any(b["text"] for b in ins):  # 話し声が無いチャンクは整形不要
         print(f"in_{n}: 発言なし（整形不要）")
         continue
     if not os.path.exists(fo):
         ng.append(f"out_{n}.json がない")
         continue
-    o = json.load(open(fo))
+    o = json.load(open(fo, encoding="utf-8"))
     ik = {str(b["t"]) for b in ins}
     if ik - set(o):
         ng.append(f"out_{n}: 欠けたブロック {sorted(ik - set(o))[:5]}")
@@ -38,7 +41,7 @@ for fi in sorted(glob.glob(os.path.join(wd, "clean", "in_*.json"))):
     note = "  ← 大きく減っている。内容が落ちていないか末尾と数字を確認" if ratio < 0.7 else ""
     print(f"out_{n}: blocks={len(o)} ratio={ratio:.2f}{note}")
 
-s = open(out).read()
+s = open(out, encoding="utf-8").read()
 imgs = re.findall(r"base64,([A-Za-z0-9+/=]+)", s)
 bad = sum(1 for x in imgs if base64.b64decode(x)[:2] != b"\xff\xd8")
 ids = set(re.findall(r'id="t(\d+)"', s))

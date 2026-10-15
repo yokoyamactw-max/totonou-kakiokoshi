@@ -1,7 +1,7 @@
 {
   "name": "totonou-kakiokoshi",
-  "version": "1.1.0",
-  "description": "ととのう書き起こし：動画・音声（Loom・YouTube・UTAGE・Zoom録画・Drive・手元のファイル）を、スクリーンショット付きの読みやすい書き起こしHTMLにするスキル。文字起こしはMacの中で動くので無料。",
+  "version": "1.2.0",
+  "description": "ととのう書き起こし：動画・音声（Loom・YouTube・UTAGE・Zoom録画・Drive・手元のファイル）を、スクリーンショット付きの読みやすい書き起こしHTMLにするスキル。文字起こしはパソコンの中で動くので無料（Mac・Windows対応）。",
   "author": {
     "name": "横山直宏 (Naohiro Yokoyama)",
     "url": "https://github.com/yokoyamactw-max"

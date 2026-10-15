@@ -1,0 +1,48 @@
+filters:
+  and:
+    - file.hasTag("書き起こし")
+    - 'file.ext == "md"'
+properties:
+  file.name:
+    displayName: ファイル
+views:
+  - type: table
+    name: 新しい順
+    order:
+      - file.name
+      - 日付
+      - 種類
+      - シリーズ
+      - 講師・主催
+      - 長さ
+      - 素材
+    sort:
+      - property: 日付
+        direction: DESC
+  - type: table
+    name: シリーズ別
+    groupBy:
+      property: シリーズ
+      direction: ASC
+    order:
+      - file.name
+      - 日付
+      - 種類
+      - 講師・主催
+      - 長さ
+    sort:
+      - property: 日付
+        direction: ASC
+  - type: table
+    name: 会議だけ
+    filters:
+      and:
+        - 'note.種類 == "会議"'
+    order:
+      - file.name
+      - 日付
+      - 長さ
+      - tags
+    sort:
+      - property: 日付
+        direction: DESC

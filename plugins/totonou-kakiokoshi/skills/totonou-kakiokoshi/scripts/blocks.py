@@ -8,8 +8,8 @@ import json, os, re
 
 
 def load(wd):
-    meta = json.load(open(os.path.join(wd, "meta.json")))
-    segs = json.load(open(os.path.join(wd, "transcript.json")))["segments"]
+    meta = json.load(open(os.path.join(wd, "meta.json"), encoding="utf-8"))
+    segs = json.load(open(os.path.join(wd, "transcript.json"), encoding="utf-8"))["segments"]
     shots = []
     sd = os.path.join(wd, "shots")
     if os.path.isdir(sd):

@@ -11,7 +11,10 @@
 取り込み後、実サイズ・再生時間・音声の長さを必ず突き合わせる。
 （Driveからの取得が途中で切れ、末尾7分半を落としかけた事故の再発防止）
 """
-import argparse, json, os, re, subprocess, sys, urllib.parse, urllib.request
+import argparse, json, os, re, shutil, subprocess, sys, urllib.parse, urllib.request
+
+for _s in (sys.stdout, sys.stderr):
+    _s.reconfigure(encoding="utf-8")
 
 ap = argparse.ArgumentParser()
 ap.add_argument("workdir")
@@ -42,11 +45,23 @@ def probe(path, entries, stream=None):
     return out
 
 
-if a.file:
-    src = os.path.abspath(os.path.expanduser(a.file))
+def link_media(src):
+    """元ファイルを media.mp4 として参照する。Windows でリンクが作れなければハードリンク、だめならコピー。"""
     if os.path.exists(media) or os.path.islink(media):
         os.remove(media)
-    os.symlink(src, media)
+    for make in (os.symlink, os.link):
+        try:
+            make(src, media)
+            return
+        except OSError:
+            pass
+    print("リンクが作れないため、作業フォルダへコピーします（大きい動画は時間がかかります）", flush=True)
+    shutil.copyfile(src, media)
+
+
+if a.file:
+    src = os.path.abspath(os.path.expanduser(a.file))
+    link_media(src)
     expected_bytes = os.path.getsize(src)
 
 elif a.url:  # Loom・YouTube・Vimeo など、yt-dlp が対応しているページ
@@ -56,16 +71,14 @@ elif a.url:  # Loom・YouTube・Vimeo など、yt-dlp が対応しているペ�
         run(["yt-dlp", "--no-warnings", "--no-playlist", "-f", "bv*+ba/b", "--merge-output-format", "mp4",
              "-o", os.path.join(src_dir, "source.%(ext)s"), a.url])
     except FileNotFoundError:
-        sys.exit("yt-dlp が見つかりません。`brew install yt-dlp` で入れてください")
+        sys.exit("yt-dlp が見つかりません。`check_env.py` で入れ方を確認してください")
     except subprocess.CalledProcessError:
         sys.exit("このURLからは取得できませんでした。ログインが必要なページなら、動画を保存して --file で渡してください")
     got = [f for f in os.listdir(src_dir) if f.startswith("source.") and not f.endswith((".part", ".ytdl"))]
     if not got:
         sys.exit("取得したファイルが見つかりません（途中で止まった可能性）")
     src = os.path.join(src_dir, sorted(got, key=lambda f: os.path.getsize(os.path.join(src_dir, f)))[-1])
-    if os.path.exists(media) or os.path.islink(media):
-        os.remove(media)
-    os.symlink(src, media)
+    link_media(src)
     expected_bytes = os.path.getsize(src)
 
 elif a.hls:
@@ -109,7 +122,7 @@ has_video = bool(probe(media, "stream=codec_type", "v:0"))
 end = a.end if a.end else dur
 meta = {"media": "media.mp4", "duration": dur, "start": a.start, "end": end,
         "kind": "video" if has_video else "audio", "bytes": size}
-json.dump(meta, open(os.path.join(wd, "meta.json"), "w"), ensure_ascii=False, indent=1)
+json.dump(meta, open(os.path.join(wd, "meta.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print(json.dumps(meta, ensure_ascii=False))
 if adur:
     try:

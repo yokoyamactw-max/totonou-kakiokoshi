@@ -3,6 +3,9 @@
 読むもの: summary.html（任意）/ clean/out_N.json（整形文。控えの out_N_pass1.json 等は読まない）
 """
 import base64, glob, html, json, os, re, sys
+
+for _s in (sys.stdout, sys.stderr):
+    _s.reconfigure(encoding="utf-8")
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import blocks
 
@@ -11,11 +14,11 @@ meta, segs, shots = blocks.load(wd)
 gs = blocks.groups(meta, shots)
 raws = blocks.texts(gs, segs)
 sp = os.path.join(wd, "summary.html")
-summary = open(sp).read() if os.path.exists(sp) else ""
+summary = open(sp, encoding="utf-8").read() if os.path.exists(sp) else ""
 cleaned = {}
 for f in sorted(glob.glob(os.path.join(wd, "clean", "out_*.json"))):
     if re.fullmatch(r"out_\d+\.json", os.path.basename(f)):
-        cleaned.update({int(k): v for k, v in json.load(open(f)).items()})
+        cleaned.update({int(k): v for k, v in json.load(open(f, encoding="utf-8")).items()})
 
 sections = []
 for g, raw in zip(gs, raws):
@@ -67,5 +70,5 @@ h1{{font-size:1.6rem;line-height:1.4;margin:0 0 4px}} h2{{font-size:1.25rem;marg
 <h2>{heading}</h2>
 {''.join(sections)}
 </main></body></html>"""
-open(out, "w").write(page)
+open(out, "w", encoding="utf-8").write(page)
 print(f"{out} blocks={len(sections)} shots={len(shots)} MB={len(page.encode()) / 1e6:.1f}")

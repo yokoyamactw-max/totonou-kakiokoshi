@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>ととのう書き起こし 使い方</title>
+<meta name="description" content="動画を、スクショ付きの読みやすい書き起こし資料にする Claude Code 用スキル「ととのう書き起こし」の入れ方と使い方。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%239a3b1f'/%3E%3Cpath d='M18 20h28M18 30h28M18 40h18' stroke='white' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#faf8f4;--card:#ffffff;--ink:#1f1d1a;--sub:#46423c;--muted:#6a655d;--line:#e6e1d8;
+  --acc:#9a3b1f;--acc-ink:#ffffff;--acc-soft:#f6ebe5;
+  --ok:#2c6a37;--ok-soft:#e7f2e9;--mid:#8a5a00;--mid-soft:#fbf1dc;--ng:#8f2b1d;--ng-soft:#f9e7e3;
+  --code-bg:#24211e;--code-ink:#f3efe8;--shadow:0 1px 2px rgba(40,30,20,.06),0 4px 16px rgba(40,30,20,.05);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#161513;--card:#1f1d1a;--ink:#ece8e1;--sub:#d0cac0;--muted:#a7a197;--line:#36322d;
+  --acc:#e2906f;--acc-ink:#1a1210;--acc-soft:#2c211c;
+  --ok:#8fd09b;--ok-soft:#1c2a1f;--mid:#e9c46f;--mid-soft:#2b2414;--ng:#f2a492;--ng-soft:#301e1a;
+  --code-bg:#0f0e0d;--code-ink:#efe9df;--shadow:none;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#161513;--card:#1f1d1a;--ink:#ece8e1;--sub:#d0cac0;--muted:#a7a197;--line:#36322d;
+  --acc:#e2906f;--acc-ink:#1a1210;--acc-soft:#2c211c;
+  --ok:#8fd09b;--ok-soft:#1c2a1f;--mid:#e9c46f;--mid-soft:#2b2414;--ng:#f2a492;--ng-soft:#301e1a;
+  --code-bg:#0f0e0d;--code-ink:#efe9df;--shadow:none;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Yu Gothic UI",Meiryo,sans-serif;font-size:16px;line-height:1.85;overflow-wrap:anywhere}
+a{color:var(--acc)}
+.wrap{max-width:880px;margin:0 auto;padding:0 16px 96px}
+header.hero{padding:44px 0 8px}
+.eyebrow{font-size:13px;letter-spacing:.12em;color:var(--muted);margin:0 0 6px}
+h1{font-size:32px;line-height:1.3;margin:0 0 10px;letter-spacing:.01em}
+.lead{font-size:17px;color:var(--sub);margin:0 0 20px}
+.dl{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 8px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:10px;font-weight:700;text-decoration:none;font-size:15px;border:1px solid var(--acc)}
+.btn.primary{background:var(--acc);color:var(--acc-ink)}
+.btn.ghost{color:var(--acc);background:transparent}
+.ver{font-size:13px;color:var(--muted)}
+nav.toc{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 20px;box-shadow:var(--shadow);margin:24px 0 8px;font-size:15px}
+nav.toc ol{margin:0;padding-left:22px;columns:2;column-gap:32px}
+nav.toc li{margin:2px 0;break-inside:avoid}
+nav.toc a{text-decoration:none}
+h2{font-size:24px;line-height:1.4;margin:52px 0 14px;padding-top:6px;scroll-margin-top:12px}
+h2 .no{display:inline-block;min-width:1.6em;color:var(--acc)}
+h3{font-size:18px;margin:26px 0 8px}
+h4{font-size:16px;margin:16px 0 4px}
+p{margin:8px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 22px;box-shadow:var(--shadow);margin:0 0 14px}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+ul,ol{padding-left:22px}
+li{margin:4px 0}
+code{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:.88em;background:var(--acc-soft);border-radius:6px;padding:1px 6px}
+.box{position:relative;margin:10px 0 14px}
+.box .label{font-size:13px;color:var(--muted);margin:0 0 4px}
+.box pre{margin:0;font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:14px;line-height:1.65;background:var(--code-bg);color:var(--code-ink);border-radius:12px;padding:14px 16px;padding-right:84px;white-space:pre-wrap;word-break:break-all}
+.box.prompt pre{font-family:inherit;font-size:15px;line-height:1.8;background:var(--acc-soft);color:var(--ink);border:1px solid var(--line)}
+.copy{position:absolute;right:10px;top:30px;font:inherit;font-size:13px;font-weight:700;padding:5px 12px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.copy:focus-visible,.seg button:focus-visible,.btn:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.tbl{overflow-x:auto;margin:10px 0 14px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:15px;min-width:560px}
+th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-weight:700;color:var(--sub);font-size:14px;background:var(--acc-soft)}
+tr:last-child td{border-bottom:0}
+td.rowh{font-weight:700;white-space:nowrap}
+.mark{display:inline-block;min-width:1.8em;text-align:center;font-weight:800;border-radius:6px;padding:0 6px;margin-right:4px}
+.mark.ok{color:var(--ok);background:var(--ok-soft)}
+.mark.mid{color:var(--mid);background:var(--mid-soft)}
+.mark.ng{color:var(--ng);background:var(--ng-soft)}
+.note,.warn{border-left:4px solid var(--acc);background:var(--acc-soft);padding:10px 14px;border-radius:0 10px 10px 0;margin:12px 0;font-size:15px}
+.warn{border-left-color:var(--mid);background:var(--mid-soft)}
+.note p,.warn p{margin:4px 0}
+figure{margin:12px 0}
+figure img{display:block;width:100%;height:auto;border-radius:12px;border:1px solid var(--line)}
+figcaption{font-size:14px;color:var(--muted);margin-top:6px}
+.figs{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.seg{display:inline-flex;flex-wrap:wrap;gap:4px;padding:4px;border-radius:12px;background:var(--card);border:1px solid var(--line);margin:4px 0 14px}
+.seg button{font:inherit;font-size:15px;font-weight:700;border:0;border-radius:9px;padding:7px 14px;background:transparent;color:var(--sub);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--acc);color:var(--acc-ink)}
+ol.steps{counter-reset:s;list-style:none;padding:0;margin:0}
+ol.steps>li{position:relative;padding:4px 0 18px 50px;margin:0}
+ol.steps>li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:2px;width:34px;height:34px;border-radius:50%;background:var(--acc);color:var(--acc-ink);font-weight:800;display:flex;align-items:center;justify-content:center}
+ol.steps>li>h3{margin:2px 0 6px}
+details{border:1px solid var(--line);border-radius:12px;background:var(--card);padding:0 16px;margin:8px 0}
+details>summary{cursor:pointer;padding:12px 0;font-weight:700;list-style-position:outside}
+details[open]>summary{border-bottom:1px solid var(--line);margin-bottom:8px}
+details>*:last-child{margin-bottom:14px}
+.kbd{font-family:inherit;font-size:.9em;border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;padding:0 6px;background:var(--card)}
+footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+.top{position:fixed;right:16px;bottom:16px;width:44px;height:44px;border-radius:50%;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;text-decoration:none;color:var(--ink);font-size:20px}
+@media (max-width:640px){
+  h1{font-size:25px} h2{font-size:21px} .lead{font-size:16px}
+  nav.toc ol{columns:1}
+  .figs{grid-template-columns:1fr}
+  .card{padding:16px}
+  ol.steps>li{padding-left:44px}
+  .box pre{padding-right:16px;padding-bottom:48px}
+  .copy{top:auto;bottom:10px}
+}
+@media print{.copy,.seg,.top,nav.toc{display:none} details{border:0} details>*{display:block}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">YCS 会員向け　Claude Code 用スキル</p>
+  <h1>ととのう書き起こし 使い方</h1>
+  <p class="lead">セミナー・講座・会議の動画を、スクリーンショット付きの読みやすい資料にします。動画の URL かファイルを Claude Code に渡して「ととのう書き起こし」と頼むだけです。</p>
+  <div class="dl">
+    <a class="btn primary" href="{{ZIP}}" download>スキルをダウンロード（zip）</a>
+    <a class="btn ghost" href="https://github.com/yokoyamactw-max/totonou-kakiokoshi" target="_blank" rel="noopener">GitHub で見る</a>
+  </div>
+  <p class="ver">バージョン {{VERSION}}（{{UPDATED}} 更新）。ダウンロードしなくても、下の「準備」の文を Claude Code に貼れば入ります。</p>
+</header>
+
+<nav class="toc" aria-label="目次"><ol>
+  <li><a href="#what">これは何？</a></li>
+  <li><a href="#where">どのパソコン・どこで使える？</a></li>
+  <li><a href="#setup">準備（初回だけ）</a></li>
+  <li><a href="#use">使い方</a></li>
+  <li><a href="#sources">素材ごとの渡し方</a></li>
+  <li><a href="#obsidian">Obsidian と一緒に使う（任意）</a></li>
+  <li><a href="#cost">時間・料金・容量の目安</a></li>
+  <li><a href="#rules">守ってほしいこと</a></li>
+  <li><a href="#trouble">困ったとき</a></li>
+  <li><a href="#update">更新・削除</a></li>
+</ol></nav>
+
+<!-- ============================================================ -->
+<h2 id="what"><span class="no">1</span>これは何？</h2>
+<div class="card">
+  <p>動画 1 本を、あとで読み返せる 1 枚の HTML ファイルにします。ブラウザで開くだけで読めます。</p>
+  <ul>
+    <li><b>冒頭に要約</b>：講義なら「3行でいうと」「章立て」「重要ポイント」、会議なら「決まったこと」「次にやること（ToDo）」</li>
+    <li><b>その下に本文</b>：スライドが切り替わるごとの画面と、時刻付きの書き起こし。言いよどみを取って読みやすく整えてあります</li>
+    <li><b>元の文も確認できる</b>：各ブロックの「元の書き起こし」を開くと、整える前の文章が見られます</li>
+  </ul>
+  <div class="figs">
+    <figure><img src="assets/sample-summary.jpg" width="1200" height="1026" alt="できあがりの見本。冒頭に「3行でいうと」「章立て」「重要ポイント」が並ぶ"><figcaption>冒頭の要約（見本用に作った動画から作成）</figcaption></figure>
+    <figure><img src="assets/sample-block.jpg" width="1200" height="973" alt="できあがりの見本。スライドの画面の下に、時刻付きで整えた書き起こしが並ぶ" loading="lazy"><figcaption>本文：画面と整えた書き起こし</figcaption></figure>
+  </div>
+  <h3>こんなときに</h3>
+  <ul>
+    <li>受講した講座・セミナーの復習ノートを作る</li>
+    <li>自分の会議の録画から、議事メモと ToDo を出す</li>
+    <li>長い動画の「ここだけ」（例：23:00〜25:40）を読める形にする</li>
+  </ul>
+  <p class="small muted">文字起こしはパソコンの中で動くので、外部の有料サービスは使いません。要約と整形は Claude が行います。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="where"><span class="no">2</span>どのパソコン・どこで使える？</h2>
+<p>このスキルは、<b>自分のパソコンの中で動画を処理する</b>ので、パソコンの上で動く Claude Code で使います。デスクトップアプリの Code タブでも、ターミナルでも、できることは同じです。パソコンの種類と、Claude を使う場所ごとの対応は次のとおりです。</p>
+<div class="tbl"><table>
+  <thead><tr><th style="width:16%">パソコン</th><th style="width:30%">Claude Code<br><span class="small">（デスクトップアプリの Code タブ・ターミナル）</span></th><th style="width:27%">Cowork<br><span class="small">（作業を丸ごと任せるモード）</span></th><th style="width:27%">Web 版 claude.ai・スマホ</th></tr></thead>
+  <tbody>
+    <tr><td class="rowh">M系 Mac<br><span class="small muted">（M1〜）</span></td>
+      <td><span class="mark ok">○</span>おすすめ。文字起こしが速い</td>
+      <td rowspan="3"><span class="mark ng">×</span>使えません。Cowork の作業はクラウド上で動き、文字起こしモデルや YouTube からの取得が止められているため</td>
+      <td rowspan="3"><span class="mark ng">×</span>使えません。アップロードは 1 ファイル 30MB までで、動画も完成した HTML も入りきらないため</td></tr>
+    <tr><td class="rowh">Intel Mac</td>
+      <td><span class="mark mid">△</span>使えます。文字起こしに時間がかかります（macOS 13 以降）</td></tr>
+    <tr><td class="rowh">Windows<br><span class="small muted">（10 / 11）</span></td>
+      <td><span class="mark mid">△</span>使えます。文字起こしに時間がかかります。準備するソフトが少し多め</td></tr>
+  </tbody>
+</table></div>
+<p class="small muted">○ そのまま使える　△ 使えるが条件あり　× 使えない。Windows on ARM（Snapdragon 搭載機など）は、文字起こしの部品が対応していないため使えません。</p>
+
+<h3>パソコンごとの違い</h3>
+<div class="tbl"><table>
+  <thead><tr><th style="width:20%">パソコン</th><th>1時間半の動画の文字起こし</th><th>はじめの準備</th></tr></thead>
+  <tbody>
+    <tr><td class="rowh">M系 Mac</td><td>3〜10分ほど</td><td>30分ほど</td></tr>
+    <tr><td class="rowh">Intel Mac</td><td>30分〜1時間半ほど（パソコンの性能しだい）</td><td>30〜40分ほど</td></tr>
+    <tr><td class="rowh">Windows</td><td>30分〜1時間半ほど（パソコンの性能しだい）</td><td>30〜40分ほど</td></tr>
+  </tbody>
+</table></div>
+<p>どのパソコンでも<b>仕上がりの質は同じ</b>です。違うのは文字起こしにかかる時間だけです。</p>
+<details>
+  <summary>しくみの違い（くわしく知りたい人向け）</summary>
+  <p>M系 Mac は、Mac に入っている計算用のチップを使う「mlx-whisper」で文字起こしをします。Intel Mac と Windows は、パソコンの頭脳（CPU）だけで計算する「faster-whisper」を使うため時間がかかります。どちらも同じ音声認識モデル（large-v3-turbo）です。</p>
+  <p>参考：作者の Mac（M5 Pro）で 10 分の音声を文字起こしすると、mlx-whisper で 18 秒、faster-whisper で約 2 分でした。一般的な Windows のノートパソコンや Intel Mac では、faster-whisper がこの数倍かかる見込みです。</p>
+</details>
+<div class="warn"><p>Windows 版は、作者の手元の Windows 実機ではまだ通しで試していません。うまく動かないときは、表示されたメッセージ（画面の写真でも可）を添えて、YCS の運営窓口までお知らせください。</p></div>
+<details>
+  <summary>自分のパソコンの種類の確かめ方</summary>
+  <p><b>Mac</b>：画面左上のりんごマーク →「この Mac について」。「チップ」に Apple M1・M2・M3・M4・M5 などとあれば <b>M系 Mac</b>、「プロセッサ」に Intel とあれば <b>Intel Mac</b> です。</p>
+  <p><b>Windows</b>：スタート →「設定」→「システム」→「バージョン情報」。「システムの種類」が「64 ビット オペレーティング システム、x64 ベース プロセッサ」なら使えます。「ARM ベース プロセッサ」の場合は使えません。</p>
+</details>
+
+<!-- ============================================================ -->
+<h2 id="setup"><span class="no">3</span>準備（初回だけ）</h2>
+<p>自分のパソコンを選ぶと、手順がそのパソコン用に切り替わります。</p>
+<div class="seg" role="group" aria-label="パソコンの種類">
+  <button type="button" data-os-btn="m" aria-pressed="true">M系 Mac</button>
+  <button type="button" data-os-btn="intel" aria-pressed="false">Intel Mac</button>
+  <button type="button" data-os-btn="win" aria-pressed="false">Windows</button>
+</div>
+
+<ol class="steps">
+<li>
+  <h3>Claude Code を用意する</h3>
+  <p>Claude の有料プラン（Pro 以上）で使えます。<a href="https://claude.ai/download" target="_blank" rel="noopener">Claude のデスクトップアプリ</a>を入れて、「Code」タブを開きます。作業するフォルダを聞かれたら、ホームフォルダ（自分の名前のフォルダ）や「書類」などを選べば大丈夫です。実行する場所を選ぶ画面が出たら、クラウドではなく<b>このパソコン（ローカル）</b>を選びます。</p>
+  <p class="small muted">すでにターミナルで Claude Code を使っている人は、そのままで構いません。</p>
+  <p data-only="intel" class="small muted">Intel Mac は macOS 13 以降が必要です。</p>
+</li>
+
+<li>
+  <h3>スキルを入れる</h3>
+  <p>Claude Code に次の文をそのまま貼って送ります。ダウンロードから置き場所への配置まで Claude がやってくれます。</p>
+  <div class="box prompt"><p class="label">Claude Code に貼る文</p><pre>https://totonou-kakiokoshi.pages.dev/totonou-kakiokoshi.zip をダウンロードして展開し、中の totonou-kakiokoshi フォルダを、ホームフォルダの .claude/skills/ の中に入れてください（フォルダがなければ作り、前の版があれば置き換えてください）。終わったら、ととのう書き起こしの環境チェックをして、足りないものがあれば教えてください。</pre><button class="copy" type="button">コピー</button></div>
+  <p>途中で「このコマンドを実行してよいか」と聞かれます。ここでは、ファイルのダウンロード（<code>curl</code>）、展開（<code>unzip</code>）、フォルダの作成（<code>mkdir</code>）、コピー（<code>cp</code>・<code>mv</code>）、環境チェック（<code>check_env.py</code>）といった内容なので、許可して大丈夫です。見慣れないもの（ファイルの削除など）が出たら、許可する前に「これは何？」と聞けば説明してくれます。</p>
+  <details>
+    <summary>自分の手で入れたいとき（zip を使う）</summary>
+    <ol>
+      <li>上の「スキルをダウンロード（zip）」でファイルを保存し、ダブルクリック（Windows は右クリック →「すべて展開」）で展開します</li>
+      <li data-only="m intel">Finder で <span class="kbd">Command</span> + <span class="kbd">Shift</span> + <span class="kbd">G</span> を押し、<code>~/.claude/skills</code> と入力して開きます（なければ、ホームフォルダで <span class="kbd">Command</span> + <span class="kbd">Shift</span> + <span class="kbd">.</span> を押して隠しフォルダを表示し、<code>.claude</code> の中に <code>skills</code> フォルダを作ります）</li>
+      <li data-only="win">エクスプローラーのアドレス欄に <code>%USERPROFILE%\.claude\skills</code> と入力して開きます（なければ <code>.claude</code> の中に <code>skills</code> フォルダを作ります）</li>
+      <li>展開した中の <code>totonou-kakiokoshi</code> フォルダを、その <code>skills</code> フォルダに入れます。<code>skills/totonou-kakiokoshi/SKILL.md</code> がある形になれば OK です</li>
+      <li>Claude Code で新しい会話を始めます</li>
+    </ol>
+  </details>
+  <details>
+    <summary>ターミナルを使える人：GitHub から入れる（更新が簡単）</summary>
+    <div class="box"><pre>claude plugin marketplace add yokoyamactw-max/totonou-kakiokoshi</pre><button class="copy" type="button">コピー</button></div>
+    <div class="box"><pre>claude plugin install totonou-kakiokoshi@yokoyama-skills</pre><button class="copy" type="button">コピー</button></div>
+    <p class="small">この方法で入れた場合、コマンドで確実に呼ぶときは <code>/totonou-kakiokoshi:totonou-kakiokoshi</code> です。<span data-only="win">Windows では先に Git for Windows（<code>winget install --id Git.Git -e</code>）を入れておくと安心です。</span></p>
+  </details>
+</li>
+
+<li>
+  <h3>必要なソフトを入れる</h3>
+  <div data-only="m intel">
+    <p>Mac にソフトを入れるには「Homebrew」という道具を使います。2 の環境チェックで <b>Homebrew が足りないと言われたときだけ</b>、先に次をやります（言われなければ飛ばして、下の文を送ります）。</p>
+    <ol>
+      <li><span class="kbd">Command</span> + <span class="kbd">スペース</span> を押して「ターミナル」と入力し、<span class="kbd">return</span> でターミナルを開きます</li>
+      <li>次の 1 行を貼り付けて <span class="kbd">return</span> を押します</li>
+    </ol>
+    <div class="box"><p class="label">ターミナルに貼る（Homebrew がないときだけ）</p><pre>/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</pre><button class="copy" type="button">コピー</button></div>
+    <ul>
+      <li>Mac のパスワードを聞かれたら入力して <span class="kbd">return</span>（入力中は文字が表示されませんが、入っています）</li>
+      <li>「Press RETURN to continue」と出たら <span class="kbd">return</span> を押します</li>
+      <li>数分後、英語で「Next steps」と出たら終わりです。ターミナルは閉じて構いません</li>
+    </ul>
+    <p>Claude Code に戻り、「Homebrew を入れました」と添えて、次の文を送ります（Homebrew を使えるようにする最後の設定も Claude がやります）。</p>
+  </div>
+  <div data-only="win">
+    <p>Claude Code に次の文を送ると、足りないソフトを winget（Windows に入っているソフトの導入ツール）で入れてくれます。途中で「このアプリがデバイスに変更を加えることを許可しますか？」と出たら「はい」を押します。</p>
+  </div>
+  <div class="box prompt"><p class="label">Claude Code に貼る文</p><pre>ととのう書き起こしの準備をしてください。足りないソフトがあれば、入れてよいか私に確認してから入れてください。文字起こし用の専用環境が必要なら、それも用意してください。</pre><button class="copy" type="button">コピー</button></div>
+  <p data-only="m">M系 Mac では、ffmpeg・yt-dlp・numpy と、文字起こしの mlx-whisper が入ります（名前は覚えなくて大丈夫です）。文字起こしモデル（約 1.6GB）は、初めて書き起こすときに自動でダウンロードされます。</p>
+  <p data-only="intel">Intel Mac では、ffmpeg・yt-dlp・numpy が入り（名前は覚えなくて大丈夫です）、そのあと文字起こし用の専用環境（faster-whisper）とモデル（約 1.6GB）を用意します。10〜20 分ほどかかります。</p>
+  <p data-only="win">Windows では、Python・Visual C++ ランタイム・yt-dlp（ffmpeg も一緒に入ります。名前は覚えなくて大丈夫です）を入れたあと、<b>一度 Claude のアプリを終了して開き直す</b>よう案内されます。開き直したら、<b>左の一覧から同じ会話を開いて</b>「続きをお願いします」と送ります。そのあと numpy と文字起こし用の専用環境（faster-whisper）・モデル（約 1.6GB）を用意します。10〜20 分ほどかかります。</p>
+  <details>
+    <summary>自分でコマンドを打ちたいとき</summary>
+    <div data-only="m">
+      <div class="box"><p class="label">ターミナル</p><pre>brew install python ffmpeg yt-dlp numpy pipx</pre><button class="copy" type="button">コピー</button></div>
+      <div class="box"><pre>pipx install mlx-whisper && pipx ensurepath</pre><button class="copy" type="button">コピー</button></div>
+      <p>終わったらターミナルと Claude Code を開き直します。</p>
+    </div>
+    <div data-only="intel">
+      <div class="box"><p class="label">ターミナル</p><pre>brew install python ffmpeg yt-dlp numpy</pre><button class="copy" type="button">コピー</button></div>
+      <div class="box"><pre>python3 ~/.claude/skills/totonou-kakiokoshi/scripts/check_env.py --setup</pre><button class="copy" type="button">コピー</button></div>
+    </div>
+    <div data-only="win">
+      <div class="box"><p class="label">PowerShell（スタートメニューで「PowerShell」と検索）</p><pre>winget install --id Python.Python.3.12 -e
+winget install --id Microsoft.VCRedist.2015+.x64 -e
+winget install --id yt-dlp.yt-dlp -e</pre><button class="copy" type="button">コピー</button></div>
+      <p>PowerShell を閉じて開き直してから：</p>
+      <div class="box"><pre>python -m pip install numpy
+python $HOME\.claude\skills\totonou-kakiokoshi\scripts\check_env.py --setup</pre><button class="copy" type="button">コピー</button></div>
+      <p class="small muted">ffmpeg が見つからないと言われたら <code>winget install --id Gyan.FFmpeg -e</code> も入れます。</p>
+    </div>
+  </details>
+</li>
+
+<li>
+  <h3>動くか確認する</h3>
+  <div class="box prompt"><p class="label">Claude Code に貼る文</p><pre>ととのう書き起こしの環境チェックをして</pre><button class="copy" type="button">コピー</button></div>
+  <p>「<b>OK: 必要なソフトはすべてそろっています</b>」と出れば準備完了です。NG のときは、足りないものと入れ方が表示されるので、そのまま Claude に「入れて」と頼めます。</p>
+</li>
+</ol>
+
+<!-- ============================================================ -->
+<h2 id="use"><span class="no">4</span>使い方</h2>
+<div class="card">
+  <p>Claude Code に「ととのう書き起こし」と書いて、動画の URL かファイルを渡します。</p>
+  <div class="box prompt"><p class="label">頼み方の例：URL</p><pre>ととのう書き起こしで、この動画を資料にして https://www.youtube.com/watch?v=xxxxxxxx</pre><button class="copy" type="button">コピー</button></div>
+  <div class="box prompt"><p class="label">頼み方の例：パソコン内のファイル（会議）</p><pre>ダウンロードフォルダの「定例会議.mp4」をととのう書き起こしで。自分の会議なので ToDo も出して</pre><button class="copy" type="button">コピー</button></div>
+  <div class="box prompt"><p class="label">頼み方の例：一部区間だけ</p><pre>この動画の 23:00〜25:40 だけ、ととのう書き起こしで https://www.loom.com/share/xxxxxxxx</pre><button class="copy" type="button">コピー</button></div>
+  <p class="small muted">「HTMLで書き起こして」「スクショ付きで書き起こして」でも動きます。確実に呼びたいときは <code>/totonou-kakiokoshi</code> と打ってから続けます。</p>
+</div>
+
+<h3>そのあとの流れ</h3>
+<ol>
+  <li><b>はじめに 4 つ聞かれます</b>：誰の素材か（自分／他人の講座）、全部か一部か、種類（講義・会議・音声だけ）、保存先。保存先などで迷ったら「おまかせ」で大丈夫です</li>
+  <li><b>取り込み</b>：動画をパソコンに取り込みます。1 時間を超える動画は 10 分以上かかることがあります</li>
+  <li><b>文字起こしとスクショ</b>：パソコンの中で文字起こしをしながら、スライドの切り替わりを撮ります</li>
+  <li><b>要約と整形</b>：Claude が要約を書き、文章を読みやすく整えます</li>
+  <li><b>完成</b>：自動で検証してから、保存先と、確認してほしい箇所（聞き取りにくかった金額・日付など）を教えてくれます</li>
+</ol>
+<p>待っている間は、他の作業をしていて構いません。ただし次の 2 つに気をつけます。</p>
+<ul>
+  <li><b>ときどき画面を見る</b>：途中で「実行してよいか」と許可を求められることがあり、許可するまで先に進みません</li>
+  <li><b>パソコンを眠らせない</b>：電源につなぎ、ノートパソコンは蓋を閉じないでおきます<span data-only="win">。「設定」→「システム」→「電源」で、スリープまでの時間を長くしておくと確実です</span><span data-only="m intel">。スリープすると処理が止まります</span></li>
+</ul>
+
+<h3>できあがったファイルの場所</h3>
+<div class="tbl"><table>
+  <thead><tr><th style="width:24%">もの</th><th>場所（保存先を指定しなかったとき）</th></tr></thead>
+  <tbody>
+    <tr><td class="rowh">完成した HTML</td><td><span data-only="m intel">「書類」フォルダの中の <code>ととのう書き起こし</code></span><span data-only="win">「ドキュメント」フォルダの中の <code>ととのう書き起こし</code></span></td></tr>
+    <tr><td class="rowh">作業用のファイル</td><td><span data-only="m intel">「ムービー」フォルダの中の <code>totonou-kakiokoshi</code></span><span data-only="win">「ビデオ」フォルダの中の <code>totonou-kakiokoshi</code></span>。取り込んだ動画などが残ります。不要になったら Claude に「ととのう書き起こしの作業フォルダを消して」と頼めます</td></tr>
+  </tbody>
+</table></div>
+
+<!-- ============================================================ -->
+<h2 id="sources"><span class="no">5</span>素材ごとの渡し方</h2>
+<div class="tbl"><table>
+  <thead><tr><th style="width:24%">素材</th><th>渡し方</th></tr></thead>
+  <tbody>
+    <tr><td class="rowh">YouTube・Loom・Vimeo</td><td>ページの URL をそのまま渡します。ログインしないと見られない動画は取り込めません。その場合は、ダウンロードボタンがあれば保存してファイルで渡し、なければ主催者に動画ファイルをもらえるか相談します</td></tr>
+    <tr><td class="rowh">Zoom のクラウド録画</td><td>外から取り込めないので、録画ページの「ダウンロード」で保存してから、ファイルとして渡します</td></tr>
+    <tr><td class="rowh">Google Drive</td><td>共有を「リンクを知っている全員」にして、そのリンクを渡します。終わったら共有を元に戻します</td></tr>
+    <tr><td class="rowh">UTAGE の講座ページ</td><td>ページの URL を渡します。Claude がブラウザを操作できる拡張機能（Claude in Chrome）を入れていれば、ページ内の動画を探して取り込みます。入れていない場合は、Claude が別の方法（ページを保存してもらう等）を案内します</td></tr>
+    <tr><td class="rowh">パソコン内のファイル</td><td>mp4・mov・m4a など。「ダウンロードフォルダの〇〇.mp4」のように名前と場所を伝えれば探してくれます。<span data-only="m intel">確実に伝えたいときは、Finder でファイルを選んで <span class="kbd">Option</span> を押しながら右クリック →「パス名をコピー」で貼ります</span><span data-only="win">確実に伝えたいときは、エクスプローラーでファイルを右クリック →「パスのコピー」（Windows 10 は <span class="kbd">Shift</span> を押しながら右クリック →「パスとしてコピー」）で貼ります</span></td></tr>
+    <tr><td class="rowh">音声だけ</td><td>m4a・mp3 など。スクショのない、文章だけの資料になります</td></tr>
+  </tbody>
+</table></div>
+
+<!-- ============================================================ -->
+<h2 id="obsidian"><span class="no">6</span>Obsidian と一緒に使う（任意）</h2>
+<div class="card">
+  <p>Obsidian を使っている人は、保存先を Obsidian の保管庫（Vault）の中にすると、<b>目次ノート</b>も作れます。</p>
+  <ul>
+    <li>HTML と同じ名前のノート（.md）ができ、日付・種類・シリーズ・講師などの項目、HTML を開くリンク、要約、本文の文字が入ります</li>
+    <li>Obsidian の検索で、書き起こしの中身まで探せるようになります（Obsidian は HTML の中身を検索しないため）</li>
+    <li>ノートの「メモ」欄に書いた内容は、作り直しても残ります</li>
+  </ul>
+  <div class="box prompt"><p class="label">頼み方の例</p><pre>ととのう書き起こしで、保存先は Obsidian の保管庫の「書き起こし」フォルダにして。目次ノートも作って</pre><button class="copy" type="button">コピー</button></div>
+  <p>一覧表がほしいときは「<b>書き起こし一覧の表も入れて</b>」と頼むと、目次ノートを新しい順・シリーズ別に並べる表（Obsidian の「Bases」機能）を置いてくれます。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="cost"><span class="no">7</span>時間・料金・容量の目安</h2>
+<div class="tbl"><table>
+  <thead><tr><th style="width:24%">項目</th><th>目安</th></tr></thead>
+  <tbody>
+    <tr><td class="rowh">全体の時間<br><span class="small muted">（1時間半のセミナー）</span></td><td>M系 Mac：20〜30分ほど（取り込み・文字起こし・要約と整形を合わせて）<br>Intel Mac・Windows：1〜2時間ほど（文字起こしの待ち時間が長いため）<br><span class="small muted">初回だけ、文字起こしモデル（約 1.6GB）のダウンロードで 10〜20 分ほど長くかかります</span></td></tr>
+    <tr><td class="rowh">文字起こしの料金</td><td>無料。パソコンの中で動きます</td></tr>
+    <tr><td class="rowh">要約・整形</td><td>Claude のプランの利用枠を使います。1時間半のセミナー 1 本で、長い文章の要約を何回か頼むくらいの量です。長い動画を続けて何本も処理すると、プランの利用上限に達することがあります。その場合は、上限が戻るまで時間をおいてから続きを頼みます</td></tr>
+    <tr><td class="rowh">パソコンの空き容量</td><td>文字起こしモデル 約 1.6GB（初回だけ）＋ 作業用に動画 1 本あたり 1GB ほど</td></tr>
+    <tr><td class="rowh">完成した HTML</td><td>1時間半の講義で 30〜40MB ほど（画面を埋め込むため）。メール添付には大きいサイズです</td></tr>
+  </tbody>
+</table></div>
+
+<!-- ============================================================ -->
+<h2 id="rules"><span class="no">8</span>守ってほしいこと</h2>
+<div class="card">
+  <ul>
+    <li><b>他人の講座・セミナーの書き起こしは、自分の学習用にとどめてください。</b>完成した HTML には講義の全文とスライドがそのまま入っています。主催者の許可なく、公開・共有・転売しないでください</li>
+    <li><b>会議の録画は、参加者の了解を得たもの</b>を使ってください</li>
+    <li><b>大事な数字は動画で確かめてください。</b>自動の文字起こしなので、聞き間違いが残ることがあります。金額・日付・条件は、完成時に挙げられた箇所を中心に、元の動画で確認します</li>
+    <li>スキル自体の再配布は許可制です（下の「利用規約」）。ほかの人に勧めるときは、このページの URL を伝えてください</li>
+  </ul>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="trouble"><span class="no">9</span>困ったとき</h2>
+<details><summary>「ととのう書き起こし」と頼んでも反応しない</summary>
+  <p>Claude Code で<b>新しい会話</b>を始めてから、もう一度頼みます。それでもだめなら <code>/totonou-kakiokoshi</code> と打ってみます。スキルの置き場所が正しいか（<code>.claude/skills/totonou-kakiokoshi/SKILL.md</code> があるか）を Claude に確かめてもらうこともできます。</p></details>
+<details><summary>ソフトを入れたのに、環境チェックが NG のまま</summary>
+  <p>入れたソフトは、<b>Claude Code（やターミナル）を閉じて開き直す</b>まで見つからないことがあります。アプリを一度終了して開き直してから、もう一度チェックします。</p></details>
+<details><summary>Windows で「python3」と打つと Microsoft Store が開く</summary>
+  <p>Windows では <code>python</code>（それでもだめなら <code>py</code>）で呼びます。Claude に「Windows なので python で実行して」と伝えれば切り替えます。</p></details>
+<details><summary>文字起こし用の専用環境の準備（--setup）が途中で止まる</summary>
+  <p>回線の問題が多いので、もう一度実行すれば続きから進みます。会社のネットワークでは、モデルの配布元（huggingface.co）が止められていることがあります。自宅の回線で試してください。<span data-only="win">Windows で「ctranslate2 が読み込めません」と出たら、Visual C++ ランタイム（<code>winget install --id Microsoft.VCRedist.2015+.x64 -e</code>）を入れてから、もう一度実行します。</span></p></details>
+<details><summary>文字起こしがとても遅い</summary>
+  <p>Intel Mac と Windows は CPU で計算するため時間がかかります。ほかのアプリを閉じ、電源につないでおきます。まず「最初の 10 分だけ」のように一部区間で試すと、全体の時間の見当がつきます。</p></details>
+<details><summary>URL から取り込めない</summary>
+  <p>ログインが必要なページや、限定公開の設定によっては取り込めません。動画を保存して、ファイルとして渡してください。</p></details>
+<details><summary>人名や専門用語が間違っている</summary>
+  <p>「〇〇は△△の聞き間違いなので、全体を直して HTML を作り直して」と頼めば直します。スライドに正しい表記が映っていれば、それも手がかりにします。</p></details>
+<details><summary>Cowork や Web 版の claude.ai で使えますか？</summary>
+  <p>使えません。どちらもクラウド上で動くため、大きな動画や文字起こしモデルを扱えません。パソコンの Claude Code（デスクトップアプリの Code タブかターミナル）で使ってください。</p></details>
+<details><summary>完成した HTML を人に送りたい</summary>
+  <p>自分の会議など、共有してよい内容なら、Google Drive などに置いてリンクを送るのが手軽です（メール添付には大きいため）。他人の講座の書き起こしは共有しないでください。</p></details>
+
+<!-- ============================================================ -->
+<h2 id="update"><span class="no">10</span>更新・削除</h2>
+<h3>新しい版にする</h3>
+<p>このページのバージョン表示が新しくなっていたら、「準備」の 2 と同じ文を Claude Code に貼れば置き換わります（固定のダウンロード先は、いつも最新版です）。GitHub から入れた人は次の 2 つです。</p>
+<div class="box"><pre>claude plugin marketplace update yokoyama-skills
+claude plugin update totonou-kakiokoshi@yokoyama-skills</pre><button class="copy" type="button">コピー</button></div>
+<h3>削除する</h3>
+<div class="box prompt"><p class="label">Claude Code に貼る文</p><pre>ととのう書き起こしを削除してください。スキルのフォルダ（~/.claude/skills/totonou-kakiokoshi）、専用環境（~/.totonou-kakiokoshi）、文字起こしモデル（~/.cache/huggingface の中の whisper-large-v3-turbo）を、消す前に一覧で見せてから消してください。作業フォルダと完成した HTML は残してください。</pre><button class="copy" type="button">コピー</button></div>
+
+<!-- ============================================================ -->
+<h2 id="license"><span class="no">11</span>利用規約（要点）</h2>
+<div class="card small">
+  <ul>
+    <li>個人・自社の業務のために、無料で使用・改変できます</li>
+    <li>第三者への再配布・公開・販売、有料の商品や講座への組み込みは、事前の許可が必要です</li>
+    <li>このスキルで作った書き起こしの扱いは、元の動画の権利者の許可範囲に従ってください</li>
+    <li>現状のまま提供し、使用によって生じた損害について作者は責任を負いません</li>
+  </ul>
+  <p>全文は <a href="https://github.com/yokoyamactw-max/totonou-kakiokoshi/blob/main/LICENSE" target="_blank" rel="noopener">LICENSE</a> をご覧ください。</p>
+</div>
+
+<footer>
+  <p>ととのう書き起こし バージョン {{VERSION}}（{{UPDATED}} 更新）　作者：横山直宏</p>
+  <p><a href="{{ZIP}}" download>zip をダウンロード</a>　<a href="https://github.com/yokoyamactw-max/totonou-kakiokoshi" target="_blank" rel="noopener">GitHub</a></p>
+</footer>
+</div>
+<a class="top" href="#" aria-label="ページの先頭へ">↑</a>
+
+<script>
+(function(){
+  var KEY = "tk-os";
+  function apply(os){
+    document.querySelectorAll("[data-os-btn]").forEach(function(b){ b.setAttribute("aria-pressed", String(b.dataset.osBtn === os)); });
+    document.querySelectorAll("[data-only]").forEach(function(el){ el.hidden = el.dataset.only.split(" ").indexOf(os) < 0; });
+  }
+  var os = null;
+  try { os = localStorage.getItem(KEY); } catch (e) {}
+  if (!os) { os = /Windows/i.test(navigator.userAgent) ? "win" : "m"; }
+  apply(os);
+  document.querySelectorAll("[data-os-btn]").forEach(function(b){
+    b.addEventListener("click", function(){
+      apply(b.dataset.osBtn);
+      try { localStorage.setItem(KEY, b.dataset.osBtn); } catch (e) {}
+    });
+  });
+  document.querySelectorAll(".copy").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var text = btn.parentNode.querySelector("pre").innerText;
+      function done(){ btn.textContent = "コピーしました"; setTimeout(function(){ btn.textContent = "コピー"; }, 1600); }
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(done, fallback);
+      } else { fallback(); }
+      function fallback(){
+        var ta = document.createElement("textarea"); ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand("copy"); done(); } catch (e) {}
+        document.body.removeChild(ta);
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>

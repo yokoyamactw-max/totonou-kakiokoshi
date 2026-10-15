@@ -10,7 +10,10 @@ meta.json の start/end 区間だけを対象にし、ファイル名は元動�
 埋もれる。そこで全区間から「動かない画素」を自動で求め（顔映像・動画部分は除外）、その画素だけで変化を見る。
 この補助検出は既存の3モード共通で、動かない画素が画面の30%未満（カメラ映像など）のときは自動でスキップする。
 """
-import argparse, json, os, shutil, subprocess
+import argparse, json, os, shutil, subprocess, sys
+
+for _s in (sys.stdout, sys.stderr):
+    _s.reconfigure(encoding="utf-8")
 import numpy as np
 
 ap = argparse.ArgumentParser()
@@ -18,7 +21,7 @@ ap.add_argument("workdir")
 ap.add_argument("--mode", choices=["fine", "key", "coarse"], default="fine")
 a = ap.parse_args()
 wd = os.path.abspath(a.workdir)
-meta = json.load(open(os.path.join(wd, "meta.json")))
+meta = json.load(open(os.path.join(wd, "meta.json"), encoding="utf-8"))
 S, E = float(meta["start"]), float(meta["end"])
 video = os.path.join(wd, meta["media"])
 FPS, TH, GAP = {"fine": (5, 12.0, 0), "key": (2, 16.0, 12), "coarse": (2, 14.0, 15)}[a.mode]

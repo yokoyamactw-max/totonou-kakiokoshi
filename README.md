@@ -10,6 +10,8 @@ Claude Code に「この動画を書き起こして」と動画のURLやファ�
 
 1ファイルのHTMLなので、ブラウザで開くだけで読めます。
 
+**使い方マニュアル（図解・Mac/Windows 別の手順）**：https://totonou-kakiokoshi.pages.dev/
+
 ## できること
 
 | 取り込める素材 | 例 |
@@ -20,41 +22,36 @@ Claude Code に「この動画を書き起こして」と動画のURLやファ�
 | パソコン内のファイル | mp4 / mov / m4a など。Zoom のクラウド録画は一度ダウンロードしてから |
 
 「23:00〜25:40だけ」のような一部区間の書き起こしもできます。
-
-## 料金
-
-- 文字起こしは Mac の中で動く音声認識（mlx-whisper）を使うので**無料**です。外部の有料APIは使いません
-- 要約と文章の整形は Claude が行うので、お使いの Claude プランの利用枠を消費します（1時間半のセミナー1本で、サブエージェントを4体ほど動かす量です）
+Obsidian を使っている人は、検索用の「目次ノート」も一緒に作れます（任意）。
 
 ## 動く環境
 
-- **Apple シリコン（M1 以降）の Mac**（Intel Mac・Windows では文字起こし部分が動きません）
-- **Claude Code**（ターミナル版、またはデスクトップアプリの Code タブ）
-- ディスクの空き：作業用に動画1本あたり 1GB 程度。初回は音声認識モデル（約1.6GB）を自動でダウンロードします
+| パソコン | 文字起こしエンジン | 1時間半の動画の文字起こし |
+|---|---|---|
+| Apple シリコン（M1 以降）の Mac | mlx-whisper | 3〜10分ほど |
+| Windows 10 / 11（x64）・Intel Mac | faster-whisper（CPU） | 30分〜1時間半ほど（パソコンの性能しだい） |
+
+- **Claude Code**（ターミナル版、またはデスクトップアプリの Code タブ）で使います
+- ディスクの空き：音声認識モデル（約1.6GB）＋作業用に動画1本あたり 1GB 程度
+- Windows 版は Windows 実機での動作確認がまだです。うまく動かないときは Issue でお知らせください
+- Cowork と Web 版 claude.ai・スマホでは使えません（クラウド上で動くため、大きな動画や文字起こしモデルを扱えない）
+
+## 料金
+
+- 文字起こしはパソコンの中で動く音声認識を使うので**無料**です。外部の有料APIは使いません
+- 要約と文章の整形は Claude が行うので、お使いの Claude プランの利用枠を消費します（1時間半のセミナー1本で、サブエージェントを4体ほど動かす量です）
 
 ## インストール
 
-### 1. 必要なソフトを入れる（最初の1回だけ）
+### いちばん簡単な方法：Claude Code に頼む
 
-「ターミナル」アプリを開いて、次を順に実行します。
+Claude Code に次の文をそのまま貼って送ります。必要なソフトの確認・導入まで Claude が案内します。
 
-Homebrew が入っていなければ、先に https://brew.sh の手順で入れてください。
-
-```bash
-brew install python ffmpeg yt-dlp numpy pipx
+```
+https://totonou-kakiokoshi.pages.dev/totonou-kakiokoshi.zip をダウンロードして展開し、中の totonou-kakiokoshi フォルダを、ホームフォルダの .claude/skills/ の中に入れてください（フォルダがなければ作り、前の版があれば置き換えてください）。終わったら、ととのう書き起こしの環境チェックをして、足りないものがあれば教えてください。
 ```
 
-```bash
-pipx install mlx-whisper && pipx ensurepath
-```
-
-終わったらターミナルを一度閉じて開き直します。
-
-### 2. スキルを入れる（A か B のどちらか）
-
-**A. GitHub から入れる（おすすめ。更新も簡単）**
-
-ターミナルで次の2つを実行します。
+### GitHub から入れる（ターミナルを使える人向け。更新が簡単）
 
 ```bash
 claude plugin marketplace add yokoyamactw-max/totonou-kakiokoshi
@@ -67,38 +64,44 @@ claude plugin install totonou-kakiokoshi@yokoyama-skills
 Claude Code を開き直すと使えるようになります。
 新しい版が出たときは `claude plugin marketplace update yokoyama-skills` のあと `claude plugin update totonou-kakiokoshi@yokoyama-skills` で更新できます。
 
-**B. zip ファイルで入れる**
+### 必要なソフト（Claude に頼めば案内されます）
 
-1. 受け取った `totonou-kakiokoshi-v1.1.0.zip` をダブルクリックして解凍する
-2. 中の `totonou-kakiokoshi` フォルダを、ホームフォルダの `.claude/skills/` に入れる（最終的に `~/.claude/skills/totonou-kakiokoshi/SKILL.md` がある状態）
-   - Finder で `Command + Shift + G` を押し、`~/.claude/skills` と入力すると開けます。フォルダがなければ作ってください
-3. Claude Code を開き直す
+**Mac**（Homebrew が必要。https://brew.sh ）
 
-### 3. 動くか確認する
+```bash
+brew install python ffmpeg yt-dlp numpy pipx
+```
 
-Claude Code に「ととのう書き起こしの環境チェックをして」と頼むと、必要なソフトがそろっているかを確認してくれます。
+- M系 Mac：`pipx install mlx-whisper && pipx ensurepath` のあと、ターミナルを開き直す
+- Intel Mac：`python3 <スキルのフォルダ>/scripts/check_env.py --setup`
+
+**Windows**（PowerShell で実行）
+
+```powershell
+winget install --id Python.Python.3.12 -e
+winget install --id Microsoft.VCRedist.2015+.x64 -e
+winget install --id yt-dlp.yt-dlp -e
+```
+
+yt-dlp と一緒に ffmpeg も入ります（見つからないと言われたら `winget install --id Gyan.FFmpeg -e`）。Windows on ARM（Snapdragon 搭載機など）には対応していません。
+
+一度 Claude Code を閉じて開き直してから、`python -m pip install numpy` と `python <スキルのフォルダ>\scripts\check_env.py --setup` を実行します（文字起こし用の専用環境とモデルを用意します。10〜20分ほど）。
 
 ## 使い方
 
 Claude Code に「ととのう書き起こし」と話しかけて、動画のURLかファイルを渡すだけです。
 
 - 「ととのう書き起こし https://www.loom.com/share/xxxx」
-- 「~/Downloads/会議録画.mp4 をHTMLで書き起こして。ToDoも出して」
+- 「ダウンロードフォルダの 会議録画.mp4 をHTMLで書き起こして。ToDoも出して」
 - 「この動画の 23:00〜25:40 だけ、ととのう書き起こしで」
 
-「HTMLで書き起こし」「スクショ付きで書き起こし」と言っても動きます。
-コマンドで確実に呼びたいときは、GitHub から入れた場合は `/totonou-kakiokoshi:totonou-kakiokoshi`、zip で入れた場合は `/totonou-kakiokoshi` です。
-
 途中で、素材が誰のものか・全編か一部か・講義か会議かを聞かれることがあります。
-
-できあがったHTMLは、指定がなければ `~/Documents/ととのう書き起こし/` に保存されます。作業用の動画などは `~/Movies/totonou-kakiokoshi/` に残るので、不要になったら削除してください。
-
-1時間半のセミナーで、全体の所要時間はおよそ20〜30分（取り込み10分前後＋文字起こし数分＋整形）です。
+できあがったHTMLは、指定がなければ「書類（Documents）」フォルダの `ととのう書き起こし` に保存されます。
 
 ## 注意
 
 - **他人の講座・セミナーの書き起こしは、個人の学習用にとどめてください。** できあがったHTMLには講義の全文とスライドがそのまま入っています。権利者の許可なく公開・共有しないでください
-- 自動の文字起こしなので、聞き間違いが残ることがあります。金額・日付・条件など大事な数字は、要約で「聞き取り不明瞭」と示された箇所を中心に、元の動画で確かめてください
+- 自動の文字起こしなので、聞き間違いが残ることがあります。金額・日付・条件など大事な数字は、元の動画で確かめてください
 - HTMLにはスクショを埋め込むので、1時間半の講義で30〜40MBほどになります
 
 ## 利用規約

@@ -3,6 +3,9 @@
 chunk数を省略すると 1チャンク≒1.8万字 を目安に自動で決める（Sonnet 1体が確実に読み切れる量）。
 """
 import json, math, os, shutil, sys
+
+for _s in (sys.stdout, sys.stderr):
+    _s.reconfigure(encoding="utf-8")
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import blocks
 
@@ -26,5 +29,5 @@ for b in items:
     chunks[-1].append(b)
     acc += len(b["text"])
 for i, c in enumerate(chunks, 1):
-    json.dump(c, open(os.path.join(cd, f"in_{i}.json"), "w"), ensure_ascii=False, indent=1)
+    json.dump(c, open(os.path.join(cd, f"in_{i}.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print(f"shots={len(shots)} blocks={len(items)} chars={total} chunks={[len(c) for c in chunks]}")
